@@ -2,7 +2,7 @@
   "name": "express-ecommerce-api",
   "version": "0.1.0",
   "private": true,
-  "description": "Week 1 \u00b7 E-commerce API built with Express 5, Prisma 7 and Zod",
+  "description": "Week 1 · E-commerce API built with Express 5, Prisma 7 and Zod",
   "type": "module",
   "engines": {
     "node": ">=24"
@@ -11,7 +11,7 @@
     "dev": "tsx watch --env-file-if-exists=.env src/server.ts",
     "build": "prisma generate && tsc",
     "start": "node --env-file-if-exists=.env dist/server.js",
-    "test": "vitest run",
+    "test": "prisma generate && vitest run",
     "test:watch": "vitest",
     "lint": "oxlint src test",
     "typecheck": "prisma generate && tsc --noEmit",
