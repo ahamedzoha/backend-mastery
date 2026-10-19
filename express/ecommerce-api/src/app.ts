@@ -4,6 +4,8 @@ import helmet from "helmet";
 import { errorHandler, notFound } from "./middleware/errors.js";
 import { healthRouter } from "./routes/health.js";
 import { categoriesRouter } from "./routes/categories.js";
+import { productsRouter } from "./routes/products.js";
+
 export function createApp() {
   const app = express();
 
@@ -14,7 +16,7 @@ export function createApp() {
   app.use("/health", healthRouter);
   // Week 1: mount the products, categories, users, cart and orders routers here.
   app.use("/categories", categoriesRouter);
-
+  app.use("/products", productsRouter);
   app.use(notFound);
   app.use(errorHandler);
   return app;
