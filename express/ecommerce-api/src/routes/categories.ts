@@ -3,6 +3,7 @@ import { z } from "zod";
 import { prisma } from "../lib/db.js";
 import { AppError } from "../lib/errors.js";
 import { idParams } from "../lib/validation.js";
+import { requireAdmin, requireAuth } from "../middleware/auth.js";
 
 const categoryBody = z.object({
   name: z.string().trim().min(1).max(100),
@@ -24,13 +25,13 @@ categoriesRouter.get("/:id", async (req, res) => {
   res.json(category);
 });
 
-categoriesRouter.post("/", async (req, res) => {
+categoriesRouter.post("/", requireAuth, requireAdmin, async (req, res) => {
   const data = categoryBody.parse(req.body);
   const category = await prisma.category.create({ data });
   res.status(201).json(category);
 });
 
-categoriesRouter.patch("/:id", async (req, res) => {
+categoriesRouter.patch("/:id", requireAuth, requireAdmin, async (req, res) => {
   const { id } = idParams.parse(req.params);
   const data = categoryBody.parse(req.body);
   // No existence check: if the id is unknown, Prisma throws P2025 and the error handler sends 404.
@@ -38,7 +39,7 @@ categoriesRouter.patch("/:id", async (req, res) => {
   res.json(category);
 });
 
-categoriesRouter.delete("/:id", async (req, res) => {
+categoriesRouter.delete("/:id", requireAuth, requireAdmin, async (req, res) => {
   const { id } = idParams.parse(req.params);
   await prisma.category.delete({ where: { id } });
   res.status(204).end();

@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import { prisma } from "../src/lib/db.js";
 
 // Prices in cents. Safe to run more than once: existing categories and products are skipped.
@@ -71,6 +72,18 @@ const catalog = {
 };
 
 async function main() {
+  // Local dev admin. There is no API for creating admins, on purpose.
+  await prisma.user.upsert({
+    where: { email: "admin@shop.test" },
+    update: {},
+    create: {
+      email: "admin@shop.test",
+      name: "Admin",
+      role: "ADMIN",
+      passwordHash: await bcrypt.hash("admin-password", 10),
+    },
+  });
+
   for (const [categoryName, products] of Object.entries(catalog)) {
     const category = await prisma.category.upsert({
       where: { name: categoryName },
