@@ -1,0 +1,12 @@
+// Prisma 7: the client is generated into src/ so tsc compiles it with the app.
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Week 1: add Category, Product, User, Cart, CartItem, Order and OrderItem here,
+// then run `npm run db:migrate -- --name init`.
