@@ -4,6 +4,7 @@ import type { Prisma } from "../generated/prisma/client.js";
 import { prisma } from "../lib/db.js";
 import { AppError } from "../lib/errors.js";
 import { idParams } from "../lib/validation.js";
+import { requireAdmin, requireAuth } from "../middleware/auth.js";
 
 // description and stock are optional, not .default(): the database fills them on create,
 // and a .default() would also kick in on PATCH and silently reset them.
@@ -103,13 +104,13 @@ productsRouter.get("/:id", async (req, res) => {
   res.json(product);
 });
 
-productsRouter.post("/", async (req, res) => {
+productsRouter.post("/", requireAuth, requireAdmin, async (req, res) => {
   const data = productBody.parse(req.body);
   const product = await prisma.product.create({ data, include: withCategory });
   res.status(201).json(product);
 });
 
-productsRouter.patch("/:id", async (req, res) => {
+productsRouter.patch("/:id", requireAuth, requireAdmin, async (req, res) => {
   const { id } = idParams.parse(req.params);
   const data = productBody.partial().parse(req.body);
   const product = await prisma.product.update({
@@ -120,7 +121,7 @@ productsRouter.patch("/:id", async (req, res) => {
   res.json(product);
 });
 
-productsRouter.delete("/:id", async (req, res) => {
+productsRouter.delete("/:id", requireAuth, requireAdmin, async (req, res) => {
   const { id } = idParams.parse(req.params);
   await prisma.product.delete({ where: { id } });
   res.status(204).end();
