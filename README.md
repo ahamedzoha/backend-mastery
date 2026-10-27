@@ -87,6 +87,7 @@ backend-mastery/
 │   ├── performance-benchmarks.md
 │   └── learning-journey.md   weekly reports
 ├── docker/postgres-init.sql  creates one database per project
+├── postman/                  API collections (one per project) + environments
 ├── docker-compose.yml        local Postgres
 └── .github/workflows/ci.yml  lint, test, build for every project
 ```
@@ -163,6 +164,7 @@ npm run start:dev    # http://localhost:3101/health
 
 - **Vitest** everywhere. Express tests call the app through supertest without starting a server. NestJS has unit tests (`*.spec.ts`) and end-to-end tests (`test/*.e2e-spec.ts`).
 - **CI** (`.github/workflows/ci.yml`) runs `lint`, `test`, `test:e2e` (where present) and `build` for every project in the matrix, on each push to `main` and each pull request.
+- **Postman** ([`postman/`](postman)): one collection per project with tests, token handling and an environment per framework. See [`postman/README.md`](postman/README.md).
 
 ---
 
