@@ -6,6 +6,7 @@ import { healthRouter } from "./routes/health.js";
 import { categoriesRouter } from "./routes/categories.js";
 import { productsRouter } from "./routes/products.js";
 import { authRouter } from "./routes/auth.js";
+import { cartRouter } from "./routes/cart.js";
 
 export function createApp() {
   const app = express();
@@ -19,6 +20,7 @@ export function createApp() {
   app.use("/auth", authRouter);
   app.use("/categories", categoriesRouter);
   app.use("/products", productsRouter);
+  app.use("/cart", cartRouter);
   app.use(notFound);
   app.use(errorHandler);
   return app;
