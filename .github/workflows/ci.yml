@@ -9,6 +9,22 @@ jobs:
   test:
     name: ${{ matrix.project }}
     runs-on: ubuntu-latest
+    # The NestJS e2e test boots the whole app, which now connects to Postgres.
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+      JWT_SECRET: ci-only-secret
     strategy:
       fail-fast: false
       matrix:

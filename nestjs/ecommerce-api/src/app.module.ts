@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { ObserveModule } from './observe.js';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { dataSourceOptions } from './data-source.js';
 
 @Module({
   imports: [
@@ -11,8 +13,7 @@ import { ObserveModule } from './observe.js';
       appSecret: process.env.OBSERVE_APP_SECRET!,
       serviceId: 'nest-ecommerce-api',
     }),
-    // Week 1: TypeOrmModule.forRoot({ type: 'postgres', url: process.env.DATABASE_URL, ... })
-    // and the products, categories, users, cart and orders modules go here.
+    TypeOrmModule.forRoot(dataSourceOptions),
   ],
   controllers: [AppController],
   providers: [AppService],
