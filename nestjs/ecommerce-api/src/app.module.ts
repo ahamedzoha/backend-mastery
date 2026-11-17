@@ -4,6 +4,7 @@ import { AppService } from './app.service.js';
 import { ObserveModule } from './observe.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from './data-source.js';
+import { AuthModule } from './auth/auth.module.js';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { dataSourceOptions } from './data-source.js';
       serviceId: 'nest-ecommerce-api',
     }),
     TypeOrmModule.forRoot(dataSourceOptions),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
