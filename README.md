@@ -192,7 +192,7 @@ The apps run on Coolify on our own server, in a Coolify project called `backend-
 - **Config:** `DATABASE_URL` and `JWT_SECRET` are set per app in Coolify, never in git.
 - **Migrations:**
   - **NestJS:** Coolify runs `npx typeorm migration:run -d dist/data-source.js` as the post-deployment command.
-  - **Express:** migrations are applied by hand for now, through an SSH tunnel to the database, because the runtime image has no Prisma CLI.
+  - **Express:** migrations are applied by hand for now, through an SSH tunnel to the database, because the runtime image leaves out `prisma.config.ts` and the `prisma/` folder that `prisma migrate deploy` needs.
 - **Admin login:** the live databases were seeded, then the admin's password was replaced, since the seed's password is public here.
 
 ---
