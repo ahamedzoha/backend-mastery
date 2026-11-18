@@ -32,7 +32,7 @@
 
 | Week | Dates | Project | Express | NestJS | Status |
 |---|---|---|---|---|---|
-| 1 | 19 to 25 Oct | E-commerce API | [`express/ecommerce-api`](express/ecommerce-api) | [`nestjs/ecommerce-api`](nestjs/ecommerce-api) | 🟡 Scaffolded |
+| 1 | 19 to 25 Oct | E-commerce API | [`express/ecommerce-api`](express/ecommerce-api) | [`nestjs/ecommerce-api`](nestjs/ecommerce-api) | 🔵 Built and deployed, tests deferred |
 | 2 | 26 Oct to 1 Nov | Authentication system | [`express/auth-system`](express/auth-system) | [`nestjs/auth-system`](nestjs/auth-system) | ⚪ Not started |
 | 3 | 2 to 8 Nov | Real-time chat | [`express/realtime-chat`](express/realtime-chat) | [`nestjs/realtime-chat`](nestjs/realtime-chat) | ⚪ Not started |
 | 4 | 9 to 15 Nov | SaaS platform + microservices | [`express/saas-platform`](express/saas-platform) | [`nestjs/saas-platform`](nestjs/saas-platform) | ⚪ Not started |
@@ -50,7 +50,7 @@ A project counts as done in a framework when it is **built** (every core feature
 
 | Project | Express | NestJS |
 |---|---|---|
-| E-commerce API | ☐ built · ☐ tested · ☐ deployed | ☐ built · ☐ tested · ☐ deployed |
+| E-commerce API | ☑ built · ☐ tested · ☑ deployed | ☑ built · ☐ tested · ☑ deployed |
 | Auth system | ☐ built · ☐ tested · ☐ deployed | ☐ built · ☐ tested · ☐ deployed |
 | Real-time chat | ☐ built · ☐ tested · ☐ deployed | ☐ built · ☐ tested · ☐ deployed |
 | SaaS + microservices | ☐ built · ☐ tested · ☐ deployed | ☐ built · ☐ tested · ☐ deployed |
@@ -61,7 +61,7 @@ Plus: ☐ 4 weekly reports · ☐ 3 comparison reports · ☐ demo
 
 | Project | Express | NestJS |
 |---|---|---|
-| E-commerce API | _not deployed yet_ | _not deployed yet_ |
+| E-commerce API | [express-ecommerce.azazahamed.com](https://express-ecommerce.azazahamed.com/products) | [nest-ecommerce.azazahamed.com](https://nest-ecommerce.azazahamed.com/products) |
 | Auth system | _not deployed yet_ | _not deployed yet_ |
 | Real-time chat | _not deployed yet_ | _not deployed yet_ |
 | SaaS + microservices | _not deployed yet_ | _not deployed yet_ |
@@ -73,12 +73,12 @@ Plus: ☐ 4 weekly reports · ☐ 3 comparison reports · ☐ demo
 ```text
 backend-mastery/
 ├── express/
-│   ├── ecommerce-api/        week 1 · scaffolded
+│   ├── ecommerce-api/        week 1 · live
 │   ├── auth-system/          week 2
 │   ├── realtime-chat/        week 3
 │   └── saas-platform/        week 4
 ├── nestjs/
-│   ├── ecommerce-api/        week 1 · scaffolded
+│   ├── ecommerce-api/        week 1 · live
 │   ├── auth-system/          week 2
 │   ├── realtime-chat/        week 3
 │   └── saas-platform/        week 4
@@ -181,6 +181,19 @@ Each project has a two-stage `Dockerfile`: the build stage installs everything a
 | DigitalOcean App Platform | Paid |
 
 Not used: Heroku (no free tier), Cyclic (shut down), Vercel for the chat apps (functions can't hold WebSocket connections).
+
+### How the live apps run (Coolify)
+
+The apps run on Coolify on our own server, in a Coolify project called `backend-mastery`.
+
+- **Builds:** Coolify clones this repo and builds each app from its own `Dockerfile`. Each app has a base directory such as `/express/ecommerce-api`, a `/health` check and a 384 MB memory limit. HTTPS comes from Coolify's proxy.
+- **Redeploys:** a GitHub webhook tells Coolify about every push to `main`. Each app only redeploys when the push changes its own folder (Coolify **watch paths**, for example `express/ecommerce-api/**`). A push that only touches docs or `postman/` deploys nothing.
+- **Database:** one private PostgreSQL 17 resource, `backend-mastery-db`, with one database per app (`express_ecommerce`, `nest_ecommerce`), the same layout as `docker/postgres-init.sql`. A new project adds its own database there.
+- **Config:** `DATABASE_URL` and `JWT_SECRET` are set per app in Coolify, never in git.
+- **Migrations:**
+  - **NestJS:** Coolify runs `npx typeorm migration:run -d dist/data-source.js` as the post-deployment command.
+  - **Express:** migrations are applied by hand for now, through an SSH tunnel to the database, because the runtime image has no Prisma CLI.
+- **Admin login:** the live databases were seeded, then the admin's password was replaced, since the seed's password is public here.
 
 ---
 

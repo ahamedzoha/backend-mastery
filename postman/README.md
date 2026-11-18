@@ -7,10 +7,21 @@ One collection per project. Both frameworks build the same API, so each collecti
 | `ecommerce-api.postman_collection.json` | Week 1 requests, grouped by feature, each with tests |
 | `ecommerce-express.postman_environment.json` | `baseUrl` = `http://localhost:3001` |
 | `ecommerce-nestjs.postman_environment.json` | `baseUrl` = `http://localhost:3101` |
+| `ecommerce-express-live.postman_environment.json` | `baseUrl` = `https://express-ecommerce.azazahamed.com` |
+| `ecommerce-nestjs-live.postman_environment.json` | `baseUrl` = `https://nest-ecommerce.azazahamed.com` |
+
+## Live environments
+
+The two `-live` environments point at the deployed apps (see [Deployment](../README.md#deployment)). The live databases are already seeded, but their admin doesn't use the seed's `admin-password`, which is public in this repo. The real one is kept out of git:
+
+1. Import the environment, open it, and paste the live admin password into the **Current value** of `adminPassword`. Postman keeps current values on your machine and never exports them.
+2. Leave **Initial value** empty, so the password never ends up in an export.
+
+Running the whole collection against a live environment is safe: the **Cleanup** folder deletes what the run created. The run still leaves its customer accounts behind, and one cancelled order per run, because no endpoint deletes them.
 
 ## Use it
 
-1. In Postman, **Import** this folder (all three files).
+1. In Postman, **Import** this folder (the collection and the environments).
 2. Start the server and run `npm run db:seed` in the project. The seed creates the admin the collection logs in as.
 3. Pick an environment (top right), then open **Auth → Register** and send it. That creates a customer and saves its token.
 
